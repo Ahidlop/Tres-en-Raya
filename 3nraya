@@ -1,0 +1,255 @@
+package pkgtresenRaya;
+import java.util.Scanner;
+public class Main {
+
+    public static void main(String[] args) 
+    {
+        // VARIABLES 
+    char tablero [][]=new char [3][3];
+    char jug1='X', jug2='Y';
+    boolean win=false, turno=true;
+    int contador =0, revancha;
+    
+    Scanner leer=new Scanner(System.in);
+    
+        //INICIO
+    vacioTablero(tablero);
+    while (!win)
+        {         
+            turno=rellenarTablero(jug1,jug2,tablero,turno,leer);
+            contador++;
+            imprimirTablero(tablero);
+            if (contador>2){
+            win=comprobar (tablero,win);
+            }
+            revancha (tablero, win, leer );
+            
+        } 
+    }
+    
+    
+    public static void vacioTablero(char [][]tablero)
+    {
+        for(int i=0;i<tablero.length;i++)
+            {
+            for(int j=0;j<tablero.length;j++)
+                {
+                System.out.print(tablero[i][j]=' ');
+                if(j<tablero.length-1)
+                    System.out.print(" | ");
+                }
+            System.out.println(" ");
+            if (i<tablero.length-1)
+                System.out.println("----------");
+            }  
+    }
+    
+    public static void imprimirTablero(char [][]tablero)
+    {
+        for(int i=0;i<tablero.length;i++)
+            {
+            for(int j=0;j<tablero.length;j++)
+                {
+                System.out.print(tablero[i][j]);
+                if(j<tablero.length-1)
+                    System.out.print(" | ");
+                }
+                System.out.println(" ");
+                if (i<tablero.length-1)
+                System.out.println("----------");
+            }  
+    }
+    
+    //Method rellenar tablero 
+    public static boolean rellenarTablero (char jug1,char jug2,char [][] tablero,boolean turno, Scanner leer)
+    {
+        int i,j;
+        char jug;
+        if (turno){
+            jug=jug1;
+            turno=false;
+        }
+        else{
+            jug=jug2;
+            turno=true;
+        }
+        do{
+            System.out.println("Elija " +jug+ " una fila");
+            i=leer.nextInt();
+            System.out.println("Elija " +jug+ " una columna");
+            j=leer.nextInt();
+        }while(i>2 || j>2 || i<0 || j<0 || tablero[i][j]!=' ');
+        if (tablero [i][j]==' ')
+            { 
+            tablero [i][j]=jug;
+            }
+        return turno;
+    }
+    
+    public static boolean comprobar (char tablero [][],boolean win){
+        int x=1, y=5, ganaX=tablero.length, ganaY=(tablero.length*y), contador=0;
+        
+        win=comprobarFilas(tablero,win, x, y, ganaX, ganaY, contador);
+        if (!win)
+        {
+            win=comprobarColumnas(tablero,win, x, y, ganaX, ganaY, contador); 
+            if (!win){
+                win=comprobarDiagonaluno(tablero,win, x, y, ganaX, ganaY, contador);
+                if (!win){
+                    win=comprobarDiagonaldos(tablero,win, x, y, ganaX, ganaY, contador);
+                    if (!win){
+                        empate(tablero,contador);
+                    }
+                }
+            }
+
+        }
+        return win;
+    }
+
+    public static boolean comprobarFilas (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador)
+    {
+        int revancha;
+        for (int i=0;(i<tablero.length && !win);i++)
+        {
+            for (int j=0;(j<tablero.length);j++)
+            {
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+            }
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador X");
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador Y");
+            }   
+            else{
+                contador=0;
+            }
+        }
+        
+        return win;
+    }
+
+    public static boolean comprobarColumnas (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador)
+    {
+        for (int j=0;(j<tablero.length && !win);j++)
+        {
+            for (int i=0;(i<tablero.length);i++)
+            {
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+            }
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador X");
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador Y");
+            }
+            else{
+                contador=0;
+            }
+        }
+        return win;
+    }
+
+     public static boolean comprobarDiagonaluno (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador)
+    {
+        int i=0,j=0;
+        //Primera diagonal
+        do{
+                if (tablero[i][j]=='X'){
+                    contador+=x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador+=y;
+                }
+                i++;
+                j++;
+            }while (i<tablero.length && j<tablero.length);
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador X");
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador Y");
+            }
+            return win;
+        }
+     
+     public static boolean comprobarDiagonaldos (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador){
+        int i=0,j=tablero.length-1;
+        //Primera diagonal
+        do{
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+                i++;
+                j--;
+            }while (i<tablero.length && j>=0);
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador X");
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador Y");
+            }
+            return win;
+    }
+    public static void empate (char [][]tablero,int contador){
+        int empat = ((tablero.length)*(tablero.length));
+        boolean salir=false;
+        for (int i=0; (i<tablero.length );i++){
+             for (int j=0; j<tablero.length && !salir ;j++){
+                 if (tablero[i][j]!=' '){
+                    contador++;
+                    }
+                 else{
+                     salir=true;
+                 }
+                }
+             }
+         if (contador==empat){
+             System.out.println("Looser, habeis empatado, comienza de nuevo bro");
+             vacioTablero(tablero);
+         }
+             
+         }
+    
+    public static boolean revancha (char [][]tablero, boolean win, Scanner leer){
+        int rev;
+        if (win){
+            System.out.println("¿Queréis la revancha?");
+            System.out.println("1.Si");
+            System.out.println("2.No");
+            do{
+                rev=leer.nextInt();
+            }while (rev>2 || rev<1);
+            if (rev==1){
+                vacioTablero (tablero);
+                win=false;
+            }
+            else{
+                System.out.println("Fin del juego");
+            }       
+        }
+        return win;
+}
+}
