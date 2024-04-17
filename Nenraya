@@ -1,0 +1,286 @@
+package lopez_alejandra_3nraya;
+import java.util.Scanner;
+public class Main {
+
+    public static void main(String[] args) 
+    {
+        // VARIABLES 
+    
+    char jug1='X', jug2='Y';
+    String J1="" , J2="";
+    int empezar, n;
+    boolean win=false, turno=false;
+    int contador =0, revancha;
+    
+    Scanner leer=new Scanner(System.in);
+    
+        //INICIO
+    System.out.println("Jugador X: Introduzca su nombre");
+    J1=leer.nextLine();
+    System.out.println("Jugador Y: Introduzca su nombre");
+    J2=leer.nextLine();
+    System.out.println("¿A qué 'n' en raya deseas jugar?");
+    n=leer.nextInt();
+    char tablero [][]=new char [n][n];
+    turno=jugadores( turno,  J1,  J2, leer);
+    vacioTablero(tablero);
+    
+    while (!win)
+        {         
+            turno=rellenarTablero(jug1,jug2,tablero,turno,leer,J1,J2);
+            contador++;
+            imprimirTablero(tablero);
+            if (contador>2){
+            win=comprobar (tablero,win,J1,J2);
+            }
+            win=revancha (tablero, win, leer );
+            
+        } 
+    }
+    
+    
+    public static void vacioTablero(char [][]tablero)
+    {
+        for(int i=0;i<tablero.length;i++)
+            {
+            for(int j=0;j<tablero.length;j++)
+                {
+                System.out.print(tablero[i][j]=' ');
+                if(j<tablero.length-1)
+                    System.out.print(" | ");
+                }
+            System.out.println(" ");
+            if (i<tablero.length-1)
+                System.out.println("----------");
+            }  
+    }
+    
+    public static boolean jugadores(boolean turno, String J1, String J2, Scanner leer){
+        int empezar;
+ 
+        System.out.println("¿Quién desea empezar el juego?");
+        System.out.println("1. "+J1);
+        System.out.println("2. "+J2);
+        do{
+            empezar=leer.nextInt();
+        }while (empezar<1 || empezar>2);
+        if (empezar==1){
+            turno=true;
+        }
+        else{
+            turno=false;
+        }
+        return turno;
+    }
+    public static void imprimirTablero(char [][]tablero)
+    {
+        for(int i=0;i<tablero.length;i++)
+            {
+            for(int j=0;j<tablero.length;j++)
+                {
+                System.out.print(tablero[i][j]);
+                if(j<tablero.length-1)
+                    System.out.print(" | ");
+                }
+                System.out.println(" ");
+                if (i<tablero.length-1)
+                System.out.println("----------");
+            }  
+    }
+    
+    //Method rellenar tablero 
+    public static boolean rellenarTablero (char jug1,char jug2,char [][] tablero,boolean turno, Scanner leer, String J1, String J2)
+    {
+        int i,j;
+        char jug;
+        String nombre;
+        if (turno){
+            jug=jug1;
+            nombre=J1;
+            turno=false;
+        }
+        else{
+            jug=jug2;
+            nombre=J2;
+            turno=true;
+        }
+        do{
+            System.out.println("Elija " +nombre+ " una fila");
+            i=leer.nextInt();
+            System.out.println("Elija " +nombre+ " una columna");
+            j=leer.nextInt();
+        }while(i>tablero.length-1 || j>tablero.length-1 || i<0 || j<0 || tablero[i][j]!=' ');
+        if (tablero [i][j]==' ')
+            { 
+            tablero [i][j]=jug;
+            }
+        return turno;
+    }
+    
+    public static boolean comprobar (char tablero [][],boolean win, String J1,String J2){
+        int x=1, y=5, ganaX=tablero.length, ganaY=(tablero.length*y), contador=0;
+        
+        win=comprobarFilas(tablero,win, x, y, ganaX, ganaY, contador, J1,J2);
+        if (!win)
+        {
+            win=comprobarColumnas(tablero,win, x, y, ganaX, ganaY, contador, J1,J2); 
+            if (!win){
+                win=comprobarDiagonaluno(tablero,win, x, y, ganaX, ganaY, contador, J1,J2);
+                if (!win){
+                    win=comprobarDiagonaldos(tablero,win, x, y, ganaX, ganaY, contador, J1,J2);
+                    if (!win){
+                        empate(tablero,contador, J1, J2);
+                    }
+                }
+            }
+
+        }
+        return win;
+    }
+
+    public static boolean comprobarFilas (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador, String J1,String J2)
+    {
+        int revancha;
+        for (int i=0;(i<tablero.length && !win);i++)
+        {
+            for (int j=0;(j<tablero.length);j++)
+            {
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+            }
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J1);
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J2);
+            }   
+            else{
+                contador=0;
+            }
+        }
+        
+        return win;
+    }
+
+    public static boolean comprobarColumnas (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador, String J1,String J2)
+    {
+        for (int j=0;(j<tablero.length && !win);j++)
+        {
+            for (int i=0;(i<tablero.length);i++)
+            {
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+            }
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J1);
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J2);
+            }
+            else{
+                contador=0;
+            }
+        }
+        return win;
+    }
+
+     public static boolean comprobarDiagonaluno (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador,  String J1,String J2)
+    {
+        int i=0,j=0;
+        //Primera diagonal
+        do{
+                if (tablero[i][j]=='X'){
+                    contador+=x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador+=y;
+                }
+                i++;
+                j++;
+            }while (i<tablero.length && j<tablero.length);
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J1);
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J2);
+            }
+            return win;
+        }
+     
+     public static boolean comprobarDiagonaldos (char tablero[][], boolean win, int x, int y, int ganaX, int ganaY, int contador,  String J1,String J2){
+        int i=0,j=tablero.length-1;
+        //Primera diagonal
+        do{
+                if (tablero[i][j]=='X'){
+                    contador=contador+x;
+                }
+                else if(tablero[i][j]=='Y'){
+                    contador=contador+y;
+                }
+                i++;
+                j--;
+            }while (i<tablero.length && j>=0);
+            if(contador==ganaX){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J1);
+            }
+            else if(contador==ganaY){
+                win=true;
+                System.out.println("Ha ganado el jugador "+J2);
+            }
+            return win;
+    }
+    public static void empate (char [][]tablero,int contador, String J1, String J2){
+        int empat = ((tablero.length)*(tablero.length));
+        boolean salir=false;
+        for (int i=0; (i<tablero.length );i++){
+             for (int j=0; j<tablero.length && !salir ;j++){
+                 if (tablero[i][j]!=' '){
+                    contador++;
+                    }
+                 else{
+                     salir=true;
+                 }
+                }
+             }
+         if (contador==empat){
+             System.out.println("Looser, habeis empatado, comenzad de nuevo bro "+J1+" , "+J2);
+             vacioTablero(tablero);
+         }
+             
+         }
+    
+    public static boolean revancha (char [][]tablero, boolean win, Scanner leer){
+        int rev;
+        if (win){
+            System.out.println("¿Queréis la revancha?");
+            System.out.println("1.Si");
+            System.out.println("2.No");
+            do{
+                rev=leer.nextInt();
+            }while (rev>2 || rev<1);
+            if (rev==1){
+                vacioTablero (tablero);
+                win=false;
+            }
+            else{
+                System.out.println("Fin del juego");
+            }       
+        }
+        return win;
+}
+}
