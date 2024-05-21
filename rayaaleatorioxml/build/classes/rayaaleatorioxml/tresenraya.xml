@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<games>
+    <game>
+        <type>Tablero</type>
+        <size>3</size>
+        <players>
+            <player>
+                <name>Ale</name>
+                <file>a</file>
+                <turn>1</turn>
+            </player>
+            <player>
+                <name>Rau</name>
+                <file>r</file>
+                <turn>2</turn>
+            </player>
+        </players>
+    </game>
+    <game>
+        <type>Aleatorio</type>
+        <players>
+            <player>
+                <name>Ale</name>
+                <file>a</file>
+                <turn>1</turn>
+            </player>
+            <player>
+                <name>Rau</name>
+                <file>r</file>
+                <turn>2</turn>
+            </player>
+        </players>
+    </game>
+</games>
